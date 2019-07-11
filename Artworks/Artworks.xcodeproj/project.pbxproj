@@ -16,6 +16,8 @@
 		64048F7F22D5D5090007A441 /* ArtworksUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64048F7E22D5D5090007A441 /* ArtworksUITests.swift */; };
 		64048F8F22D5E1800007A441 /* ArtTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64048F8E22D5E1800007A441 /* ArtTableViewCell.swift */; };
 		64048F9122D5E8030007A441 /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64048F9022D5E8030007A441 /* RatingControl.swift */; };
+		64251B9D22D73A0800A97824 /* ArtTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64251B9C22D73A0800A97824 /* ArtTableViewController.swift */; };
+		64251B9F22D73DEC00A97824 /* Art.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64251B9E22D73DEC00A97824 /* Art.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,8 @@
 		64048F8022D5D5090007A441 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		64048F8E22D5E1800007A441 /* ArtTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtTableViewCell.swift; sourceTree = "<group>"; };
 		64048F9022D5E8030007A441 /* RatingControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
+		64251B9C22D73A0800A97824 /* ArtTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtTableViewController.swift; sourceTree = "<group>"; };
+		64251B9E22D73DEC00A97824 /* Art.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Art.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +108,8 @@
 				64048F5E22D5D5080007A441 /* AppDelegate.swift */,
 				64048F6022D5D5080007A441 /* ViewController.swift */,
 				64048F6222D5D5080007A441 /* Main.storyboard */,
+				64251B9C22D73A0800A97824 /* ArtTableViewController.swift */,
+				64251B9E22D73DEC00A97824 /* Art.swift */,
 				64048F9022D5E8030007A441 /* RatingControl.swift */,
 				64048F6522D5D5090007A441 /* Assets.xcassets */,
 				64048F6722D5D5090007A441 /* LaunchScreen.storyboard */,
@@ -263,9 +269,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				64048F9122D5E8030007A441 /* RatingControl.swift in Sources */,
+				64251B9D22D73A0800A97824 /* ArtTableViewController.swift in Sources */,
 				64048F6122D5D5080007A441 /* ViewController.swift in Sources */,
 				64048F5F22D5D5080007A441 /* AppDelegate.swift in Sources */,
 				64048F8F22D5E1800007A441 /* ArtTableViewCell.swift in Sources */,
+				64251B9F22D73DEC00A97824 /* Art.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

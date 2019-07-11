@@ -10,16 +10,16 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Table View Controller-->
+        <!--Art Table View Controller-->
         <scene sceneID="IqP-Hp-03T">
             <objects>
-                <tableViewController id="jc0-ga-9yP" sceneMemberID="viewController">
+                <tableViewController id="jc0-ga-9yP" customClass="ArtTableViewController" customModule="Artworks" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="90" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="5Qa-uL-bKd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="90" id="GLn-kK-TgH" customClass="ArtTableViewCell" customModule="Artworks" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ArtTableViewCell" rowHeight="90" id="GLn-kK-TgH" customClass="ArtTableViewCell" customModule="Artworks" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="90"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GLn-kK-TgH" id="2PI-bo-7Sm">
@@ -38,11 +38,16 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JbM-kY-rIM" customClass="RatingControl" customModule="Artworks" customModuleProvider="target">
-                                            <rect key="frame" x="105" y="35" width="252" height="44"/>
+                                            <rect key="frame" x="105" y="35" width="219" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </stackView>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="nameLabel" destination="6N8-89-Br5" id="lLi-eh-eYe"/>
+                                    <outlet property="photoImageView" destination="sau-4c-Ke3" id="Bnq-1T-Avi"/>
+                                    <outlet property="ratingControl" destination="JbM-kY-rIM" id="waV-XM-f4t"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>

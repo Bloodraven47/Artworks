@@ -35,11 +35,13 @@ import UIKit
     //MARK: Initialisation
     override init(frame: CGRect) {
         super.init(frame: frame)
+        print("Initialiser 1 called \n")
         setupButtons()
     }
     
     required init(coder: NSCoder) {
         super.init(coder: coder)
+        print("Initialiser 2 called \n")
         setupButtons()
     }
 

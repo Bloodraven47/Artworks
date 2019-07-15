@@ -13,28 +13,35 @@ class ArtTableViewController: UITableViewController {
     //Properties:
     
     var arts=[Art]()
-    
+    var number=0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        gatherData()
+        print("It got out")
+        print(arts.count)
+        
         //Load the sample data
-        loadSampleArt()
+//        loadSampleArt()
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
+        print("func 1")
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("func 2")
         return arts.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       guard let cell = tableView.dequeueReusableCell(withIdentifier: "ArtTableViewCell", for: indexPath) as? ArtTableViewCell else{
+        print("func 3")
+       guard let cell = tableView.dequeueReusableCell(withIdentifier: "xyz", for: indexPath) as? ArtTableViewCell else{
             fatalError("The dequeued cell is not an instance of ArtTableViewCell.")
         }
 
@@ -42,9 +49,13 @@ class ArtTableViewController: UITableViewController {
         let art = arts[indexPath.row]
         
         cell.nameLabel.text = art.name
+//        sleep(1)
         cell.photoImageView.image = art.photo
+        
         cell.ratingControl.rating = art.rating
-
+        
+        number+=1
+        print("\nreturning cell no. \(number)\n")
         return cell
     }
     
@@ -96,39 +107,85 @@ class ArtTableViewController: UITableViewController {
 
     
     //MARK: Private Methods
+   func gatherData(){
     
+        let jsonURLstring = "https://apiv2.gaana.com/home/trending/songs/v1?trending_section=1"
+        
+        guard let url = URL(string: jsonURLstring) else{fatalError("Impossible #1")}
+        URLSession.shared.dataTask(with: url) { (data, response, err) in
+            
+            print("session started")
+            guard let data=data else{fatalError("Impossible #2")}
+            print("Checkpoint no 2")
+            do{
+                print("Checkpoint no 3")
+                guard let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any] else{fatalError("Impossible #3")}
+                guard let songInfo = json["entities"] as? [[String:Any]] else{fatalError("Impossible #4")}
+                print("Checkpoint no 4")
+                for song in songInfo{
+                    guard let name = song["name"] as? String else{fatalError("Impossible #5")}
+                    guard let photo = song["atw"] as? String else{fatalError("Impossible #6")}
+                    
+                    let photoUrl = URL(string: photo)
+                    let data = try? Data(contentsOf: photoUrl!)
+                    
+                    if let imageData = data {
+                        let image = UIImage(data: imageData)
+                        guard let Art1 = Art(name: name, photo: image, rating: Int.random(in: 1..<6)) else{
+                            fatalError("Unable to Instantiate Art")
+                        }
+                        self.arts += [Art1]
+                    }
+                    print("Checkpoint no 5")
+                    
+                }
+                DispatchQueue.main.async{
+                    self.tableView.reloadData()
+                }
+                print("Checkpoint no 6")
+                
+            }catch {
+                fatalError("Impossible #7")
+            }
+            print(self.arts.count)
+            print("Checkpoint no 7")
+            
+        }.resume()
+        print("did this happen")
+    }
     private func loadSampleArt(){
-        let photo1 = UIImage(named: "Monalisa")
-        let photo2 = UIImage(named: "ChillingMonalisa")
-        let photo3 = UIImage(named: "JayMonalisa")
-        let photo4 = UIImage(named: "Couple")
-        let photo5 = UIImage(named: "ModernCouple")
-        let photo6 = UIImage(named: "Death")
-        let photo7 = UIImage(named: "Me")
         
-        guard let Art1=Art(name: "Monalisa", photo: photo1, rating: 5) else{
-            fatalError("Unable to Instantiate Art1")
-        }
-        guard let Art2=Art(name: "ChillingMonalisa", photo: photo2, rating: 3) else{
-            fatalError("Unable to Instantiate Art2")
-        }
-        guard let Art3=Art(name: "JayMonalisa", photo: photo3, rating: 4) else{
-            fatalError("Unable to Instantiate Art3")
-        }
-        guard let Art4=Art(name: "Couple", photo: photo4, rating: 3) else{
-            fatalError("Unable to Instantiate Art4")
-        }
-        guard let Art5=Art(name: "ModernCouple", photo: photo5, rating: 4) else{
-            fatalError("Unable to Instantiate Art5")
-        }
-        guard let Art6=Art(name: "Death", photo: photo6, rating: 2) else{
-            fatalError("Unable to Instantiate Art6")
-        }
-        guard let Art7=Art(name: "Me", photo: photo7, rating: 5) else{
-            fatalError("Unable to Instantiate Art7")
-        }
+            let photo1 = UIImage(named: "Monalisa")
+            let photo2 = UIImage(named: "ChillingMonalisa")
+            let photo3 = UIImage(named: "JayMonalisa")
+            let photo4 = UIImage(named: "Couple")
+            let photo5 = UIImage(named: "ModernCouple")
+            let photo6 = UIImage(named: "Death")
+            let photo7 = UIImage(named: "Me")
         
-        arts+=[Art1,Art2,Art3,Art4,Art5,Art6,Art7]
-        
+            
+            guard let Art1=Art(name: "Monalisa", photo: photo1, rating: 5) else{
+                fatalError("Unable to Instantiate Art1")
+            }
+            guard let Art2=Art(name: "ChillingMonalisa", photo: photo2, rating: 3) else{
+                fatalError("Unable to Instantiate Art2")
+            }
+            guard let Art3=Art(name: "JayMonalisa", photo: photo3, rating: 4) else{
+                fatalError("Unable to Instantiate Art3")
+            }
+            guard let Art4=Art(name: "Couple", photo: photo4, rating: 3) else{
+                fatalError("Unable to Instantiate Art4")
+            }
+            guard let Art5=Art(name: "ModernCouple", photo: photo5, rating: 4) else{
+                fatalError("Unable to Instantiate Art5")
+            }
+            guard let Art6=Art(name: "Death", photo: photo6, rating: 2) else{
+                fatalError("Unable to Instantiate Art6")
+            }
+            guard let Art7=Art(name: "Me", photo: photo7, rating: 5) else{
+                fatalError("Unable to Instantiate Art7")
+            }
+            
+            arts+=[Art1,Art2,Art3,Art4,Art5,Art6,Art7]
     }
 }

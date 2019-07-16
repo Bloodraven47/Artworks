@@ -34,5 +34,8 @@ class Art{
         
     }
     
+    func addphoto(_ photo: UIImage?){
+        self.photo = photo
+    }
     
 }

@@ -18,7 +18,8 @@ class ArtTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        gatherData()
+//        gatherData()
+        gatherDataOneByOne()
         print("It got out")
         print(arts.count)
         
@@ -153,6 +154,73 @@ class ArtTableViewController: UITableViewController {
         }.resume()
         print("did this happen")
     }
+    
+    private func gatherDataOneByOne(){
+        
+        let jsonURLString = "https://apiv2.gaana.com/home/trending/songs/v1?trending_section=1"
+        
+        guard let url = URL(string: jsonURLString) else{fatalError("Tumse nhp")}
+        
+        
+        URLSession.shared.dataTask(with: url) { (data, response, Err) in
+            
+            guard let data = data else{fatalError("tumse nhp")}
+            //Declaring json outside do while, so that I don't have to write complete code in that do while scope itself
+            let json: [String:Any]
+            
+            //do while to instantiate json object
+            do{
+                json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! [String:Any]
+            }catch{
+                fatalError("tumse nhp")
+            }
+            
+            // Getting the relevant array of dictionaries
+            guard let songInfo = json["entities"] as? [[String:Any]] else{fatalError("tumse nhp")}
+            
+            
+            //Populating the table with names and ratings only first
+            for song in songInfo{
+                guard let name = song["name"] as? String else{fatalError("nhp")}
+                
+                guard let Art1 = Art(name: name, photo: nil, rating: Int.random(in: 1..<6)) else{fatalError("nhp")}
+                
+                self.arts+=[Art1]
+            }
+            
+            //Reloading entire tableview to show the names and ratings
+            DispatchQueue.main.async{
+                self.tableView.reloadData()
+                print("whole view was reloaded")
+            }
+            
+            //Now downloading the photos
+            for (index,song) in songInfo.enumerated(){
+                guard let photo = song["atw"] as? String else{fatalError("nhp")}
+                
+                guard let url = URL(string: photo) else{fatalError("nhp")}
+                let photoData:Data
+                
+                do{
+                    photoData = try Data(contentsOf: url)
+                }catch{fatalError("nhp")}
+                
+                let image = UIImage(data: photoData)
+                self.arts[index].addphoto(image)
+                DispatchQueue.main.async{
+                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                }
+                print("doing the step")
+            }
+            
+            
+        }.resume()
+        
+        
+    }
+    
+    
+    
     private func loadSampleArt(){
         
             let photo1 = UIImage(named: "Monalisa")

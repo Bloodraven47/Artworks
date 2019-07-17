@@ -15,10 +15,11 @@ class Art{
     var name:String
     var photo: UIImage?
     var rating:Int
+    var photoData: String?
     
     //Initialization:
     
-    init?(name:String , photo:UIImage? , rating:Int ){
+    init?(name:String , photo:UIImage? , rating:Int, photoData:String? ){
         
         guard !name.isEmpty else{
             return nil
@@ -31,6 +32,7 @@ class Art{
         self.name=name
         self.photo=photo
         self.rating=rating
+        self.photoData=photoData
         
     }
     

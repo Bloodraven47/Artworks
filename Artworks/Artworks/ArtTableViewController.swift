@@ -15,6 +15,8 @@ class ArtTableViewController: UITableViewController {
     var arts=[Art]()
     var number=0
     
+    let jsonURLstring = "https://apiv2.gaana.com/home/trending/songs/v1?trending_section=1"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,7 +53,29 @@ class ArtTableViewController: UITableViewController {
         
         cell.nameLabel.text = art.name
 //        sleep(1)
-        cell.photoImageView.image = art.photo
+        
+        if art.photo == nil{
+            DispatchQueue.global().async {
+                print("trying to fetch photo")
+                
+                guard let photoURL = URL(string: art.photoData!) else{fatalError("nhp")}
+                let photoData: Data
+                do{
+                    photoData = try Data(contentsOf: photoURL)
+                    
+                }catch{fatalError("nhp")}
+                
+                let image = UIImage(data: photoData)
+                self.arts[indexPath.row].addphoto(image)
+                print("Photo has been fetched")
+            
+                DispatchQueue.main.async {
+                    cell.photoImageView.image = art.photo
+                }
+            }
+            
+        }
+        
         
         cell.ratingControl.rating = art.rating
         
@@ -108,10 +132,14 @@ class ArtTableViewController: UITableViewController {
 
     
     //MARK: Private Methods
+    
+    
+    
+    
    func gatherData(){
     
-        let jsonURLstring = "https://apiv2.gaana.com/home/trending/songs/v1?trending_section=1"
-        
+//        let jsonURLstring = "https://apiv2.gaana.com/home/trending/songs/v1?trending_section=1"
+    
         guard let url = URL(string: jsonURLstring) else{fatalError("Impossible #1")}
         URLSession.shared.dataTask(with: url) { (data, response, err) in
             
@@ -132,7 +160,7 @@ class ArtTableViewController: UITableViewController {
                     
                     if let imageData = data {
                         let image = UIImage(data: imageData)
-                        guard let Art1 = Art(name: name, photo: image, rating: Int.random(in: 1..<6)) else{
+                        guard let Art1 = Art(name: name, photo: image, rating: Int.random(in: 1..<6), photoData: photo) else{
                             fatalError("Unable to Instantiate Art")
                         }
                         self.arts += [Art1]
@@ -149,7 +177,7 @@ class ArtTableViewController: UITableViewController {
                 fatalError("Impossible #7")
             }
             print(self.arts.count)
-            print("Checkpoint no 7")
+            print("Session ended")
             
         }.resume()
         print("did this happen")
@@ -163,7 +191,7 @@ class ArtTableViewController: UITableViewController {
         
         
         URLSession.shared.dataTask(with: url) { (data, response, Err) in
-            
+            print("URL Session started")
             guard let data = data else{fatalError("tumse nhp")}
             //Declaring json outside do while, so that I don't have to write complete code in that do while scope itself
             let json: [String:Any]
@@ -182,38 +210,40 @@ class ArtTableViewController: UITableViewController {
             //Populating the table with names and ratings only first
             for song in songInfo{
                 guard let name = song["name"] as? String else{fatalError("nhp")}
-                
-                guard let Art1 = Art(name: name, photo: nil, rating: Int.random(in: 1..<6)) else{fatalError("nhp")}
+                guard var photo = song["atw"] as? String else{fatalError("nhp")}
+                guard let Art1 = Art(name: name, photo: nil, rating: Int.random(in: 1..<6),photoData: photo) else{fatalError("nhp")}
                 
                 self.arts+=[Art1]
             }
+            print(self.arts[10].name,self.arts[10].rating,self.arts[10].photo,self.arts[10].photoData)
             
             //Reloading entire tableview to show the names and ratings
             DispatchQueue.main.async{
                 self.tableView.reloadData()
                 print("whole view was reloaded")
+                
             }
             
-            //Now downloading the photos
-            for (index,song) in songInfo.enumerated(){
-                guard let photo = song["atw"] as? String else{fatalError("nhp")}
-                
-                guard let url = URL(string: photo) else{fatalError("nhp")}
-                let photoData:Data
-                
-                do{
-                    photoData = try Data(contentsOf: url)
-                }catch{fatalError("nhp")}
-                
-                let image = UIImage(data: photoData)
-                self.arts[index].addphoto(image)
-                DispatchQueue.main.async{
-                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-                }
-                print("doing the step")
-            }
+//            //Now downloading the photos
+//            for (index,song) in songInfo.enumerated(){
+//                guard let photo = song["atw"] as? String else{fatalError("nhp")}
+//
+//                guard let url = URL(string: photo) else{fatalError("nhp")}
+//                let photoData:Data
+//
+//                do{
+//                    photoData = try Data(contentsOf: url)
+//                }catch{fatalError("nhp")}
+//
+//                let image = UIImage(data: photoData)
+//                self.arts[index].addphoto(image)
+//                DispatchQueue.main.async{
+//                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+//                }
+//                print("doing the step")
+//            }
             
-            
+            print("URL Session ended")
         }.resume()
         
         
@@ -232,25 +262,25 @@ class ArtTableViewController: UITableViewController {
             let photo7 = UIImage(named: "Me")
         
             
-            guard let Art1=Art(name: "Monalisa", photo: photo1, rating: 5) else{
+        guard let Art1=Art(name: "Monalisa", photo: photo1, rating: 5, photoData: nil) else{
                 fatalError("Unable to Instantiate Art1")
             }
-            guard let Art2=Art(name: "ChillingMonalisa", photo: photo2, rating: 3) else{
+        guard let Art2=Art(name: "ChillingMonalisa", photo: photo2, rating: 3, photoData: nil) else{
                 fatalError("Unable to Instantiate Art2")
             }
-            guard let Art3=Art(name: "JayMonalisa", photo: photo3, rating: 4) else{
+        guard let Art3=Art(name: "JayMonalisa", photo: photo3, rating: 4, photoData: nil) else{
                 fatalError("Unable to Instantiate Art3")
             }
-            guard let Art4=Art(name: "Couple", photo: photo4, rating: 3) else{
+        guard let Art4=Art(name: "Couple", photo: photo4, rating: 3, photoData: nil) else{
                 fatalError("Unable to Instantiate Art4")
             }
-            guard let Art5=Art(name: "ModernCouple", photo: photo5, rating: 4) else{
+        guard let Art5=Art(name: "ModernCouple", photo: photo5, rating: 4, photoData: nil) else{
                 fatalError("Unable to Instantiate Art5")
             }
-            guard let Art6=Art(name: "Death", photo: photo6, rating: 2) else{
+        guard let Art6=Art(name: "Death", photo: photo6, rating: 2, photoData: nil) else{
                 fatalError("Unable to Instantiate Art6")
             }
-            guard let Art7=Art(name: "Me", photo: photo7, rating: 5) else{
+        guard let Art7=Art(name: "Me", photo: photo7, rating: 5, photoData: nil) else{
                 fatalError("Unable to Instantiate Art7")
             }
             

@@ -8,83 +8,93 @@
 
 import UIKit
 
-class ArtTableViewController: UITableViewController {
+class ArtTableViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
 
-    //Properties:
+    @IBOutlet weak var tableView: UITableView!
     
+    
+    //Properties:
+    var photoDataDict=[Int:String?]()
+    var photoDict=[Int:UIImage?]()
     var arts=[Art]()
     var number=0
     let session = URLSession(configuration: .default)
     
-    let jsonURLstring = "https://apiv2.gaana.com/home/trending/songs/v1?trending_section=1"
+    let jsonURLString = "https://apiv2.gaana.com/home/trending/songs/v1?trending_section=1"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        gatherData()
+
+        tableView.delegate = self
+        tableView.dataSource = self
         gatherDataOneByOne()
-        print("It got out")
-        print(arts.count)
         
-        //Load the sample data
-//        loadSampleArt()
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+     func numberOfSections(in tableView: UITableView) -> Int {
         print("func 1")
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("func 2")
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("func 2 \(arts.count)")
         return arts.count
     }
 
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("func 3")
+        print("--- cell for row called at \(indexPath.row)")
        guard let cell = tableView.dequeueReusableCell(withIdentifier: "xyz", for: indexPath) as? ArtTableViewCell else{
+            //return UITableViewCell()
             fatalError("The dequeued cell is not an instance of ArtTableViewCell.")
         }
-
-        // Fetches the appropriate meal for the data source layout.
+        
+        // Fetches the appropriate art for the data source layout.
         let art = arts[indexPath.row]
         
-        cell.nameLabel.text = art.name
-//        sleep(1)
-        
-//        if art.photo == nil{
-//            DispatchQueue.global().async {
-//                print("trying to fetch photo")
-//
-//                guard let photoURL = URL(string: art.photoData!) else{print("nhp");return}
-//                let photoData: Data
-//                do{
-//                    photoData = try Data(contentsOf: photoURL)
-//
-//                }catch{print("nhp");return}
-//
-//                let image = UIImage(data: photoData)
-//                self.arts[indexPath.row].addphoto(image)
-//                print("Photo has been fetched")
-//
-//                DispatchQueue.main.async {
-//
-//                    cell.photoImageView.image = art.photo
-//                }
-//            }
-//
-//        }
+//        //Assigns the values to cell
+//        cell.nameLabel.text = art.name
+//        cell.ratingControl.rating = art.rating
         
         
-        cell.ratingControl.rating = art.rating
-        cell.photoImageView.image = art.photo
-        
+//        fetchAndAssignPhoto(row: indexPath.row, cell: cell)
+        cell.bindModel(ArtObject: art)
+        self.fetchPhoto(row : indexPath.row, completion : { (image) in
+            DispatchQueue.main.async {
+                cell.bindImage(image: image)
+            }
+        })
+        //Debug comments
         number+=1
-        print("\nreturning cell no. \(number)\n")
+        print("--- returning cell no. \(number)\n")
         return cell
+    }
+    
+    func fetchPhoto(row : Int, completion : @escaping (UIImage?)-> ()) {
+        if self.photoDict[row] == nil{
+            DispatchQueue.global().async {
+                guard let photo = self.photoDataDict[row] as? String else{print("nhp");return}
+                
+                guard let url = URL(string: photo) else{print("nhp");return}
+                let photoData:Data
+                
+                do{
+                    photoData = try Data(contentsOf: url)
+                }catch{print("nhp");return}
+                
+                let image = UIImage(data: photoData)
+                self.photoDict[row] = image
+                completion(image)
+                print("Download URL Session ended")
+                
+            }
+        }
+        else{
+            completion(self.photoDict[row] as? UIImage)
+        }
     }
     
 
@@ -137,62 +147,13 @@ class ArtTableViewController: UITableViewController {
     //MARK: Private Methods
     
     
-    
-    
-   func gatherData(){
-    
-//        let jsonURLstring = "https://apiv2.gaana.com/home/trending/songs/v1?trending_section=1"
-    
-    guard let url = URL(string: jsonURLstring) else{print("Impossible #1");return}
-        session.dataTask(with: url) { (data, response, err) in
-            
-            print("session started")
-            guard let data=data else{print("nhp");return}
-            print("Checkpoint no 2")
-            do{
-                print("Checkpoint no 3")
-                guard let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any] else{print("nhp");return}
-                guard let songInfo = json["entities"] as? [[String:Any]] else{print("nhp");return}
-                print("Checkpoint no 4")
-                for song in songInfo{
-                    guard let name = song["name"] as? String else{print("nhp");return}
-                    guard let photo = song["atw"] as? String else{print("nhp");return}
-                    
-                    let photoUrl = URL(string: photo)
-                    let data = try? Data(contentsOf: photoUrl!)
-                    
-                    if let imageData = data {
-                        let image = UIImage(data: imageData)
-                        guard let Art1 = Art(name: name, photo: image, rating: Int.random(in: 1..<6), photoData: photo) else{
-                            print("nhp");return
-                        }
-                        self.arts += [Art1]
-                    }
-                    print("Checkpoint no 5")
-                    
-                }
-                DispatchQueue.main.async{
-                    self.tableView.reloadData()
-                }
-                print("Checkpoint no 6")
-                
-            }catch {
-                print("nhp");return
-            }
-            print(self.arts.count)
-            print("Session ended")
-            
-        }.resume()
-        print("did this happen")
-    }
-    
     private func gatherDataOneByOne(){
         
-        let jsonURLString = "https://apiv2.gaana.com/home/trending/songs/v1?trending_section=1"
+        print("Started gathering data")
         
         guard let url = URL(string: jsonURLString) else{print("Tumse nhp");return}
         
-        
+        //URL session for getting song name and photoURL of every song
         session.dataTask(with: url) { (data, response, Err) in
             print("URL Session started")
             guard let data = data else{print("nhp");return}
@@ -212,25 +173,42 @@ class ArtTableViewController: UITableViewController {
             
             
             //Populating the table with names and ratings only first
-            for song in songInfo{
+            for (index,song) in songInfo.enumerated(){
                 guard let name = song["name"] as? String else{print("nhp");return}
-                guard var photo = song["atw"] as? String else{print("nhp");return}
-                guard let Art1 = Art(name: name, photo: nil, rating: Int.random(in: 1..<6),photoData: photo) else{print("nhp");return}
+                guard let photo = song["atw"] as? String else{print("nhp");return}
+                self.photoDataDict[index] = photo
+                guard let Art1 = Art(name: name, rating: Int.random(in: 1..<6)) else{print("nhp");return}
                 
-                self.arts+=[Art1]
+                self.arts += [Art1]
+//                DispatchQueue.main.async {
+//                    print("The index is \(index) and count is \(self.arts.count) ")
+//                    self.tableView.beginUpdates()
+//                    self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+//                    self.tableView.endUpdates()
+//                }
             }
-            print(self.arts[10].name,self.arts[10].rating,self.arts[10].photo,self.arts[10].photoData)
             
             //Reloading entire tableview to show the names and ratings
             DispatchQueue.main.async{
                 self.tableView.reloadData()
-                print("whole view was reloaded")
-                
+                print("--- whole view was reloaded")
+
             }
+        
             
-//            //Now downloading the photos
-//            for (index,song) in songInfo.enumerated(){
-//                guard let photo = song["atw"] as? String else{print("nhp");return}
+            print("URL Session ended")
+        }.resume()
+        
+    }
+    
+//    func fetchAndAssignPhoto(row:Int, cell: ArtTableViewCell){
+//        print("--- cell image fetch called at \(row)")
+//        if self.photoDict[row] == nil{
+//            DispatchQueue.global().async {
+//                print("--- cell image fetch at \(row)")
+//                print("Download URL Session started")
+//
+//                guard let photo = self.photoDataDict[row] as? String else{print("nhp");return}
 //
 //                guard let url = URL(string: photo) else{print("nhp");return}
 //                let photoData:Data
@@ -240,96 +218,19 @@ class ArtTableViewController: UITableViewController {
 //                }catch{print("nhp");return}
 //
 //                let image = UIImage(data: photoData)
-//                self.arts[index].addphoto(image)
-//                DispatchQueue.main.async{
-//                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-//                }
+//                self.photoDict[row] = image
+//                //DispatchQueue.main.async{
+//                    print("--- cell image set at \(row)")
+//                    cell.photoImageView.image = self.photoDict[row] as? UIImage
+//                //}
 //                print("doing the step")
+//
+//                print("Download URL Session ended")
+//
 //            }
-            
-            print("URL Session ended")
-        }.resume()
-        
-        
-        
-        session.dataTask(with: url) { (data, response, Err) in
-            print("Download URL Session started")
-            guard let data = data else{print("tumse nhp");return}
-            //Declaring json outside do while, so that I don't have to write complete code in that do while scope itself
-            let json: [String:Any]
-            
-            //do while to instantiate json object
-            do{
-                json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! [String:Any]
-            }catch{
-                print("nhp");return
-            }
-            
-            // Getting the relevant array of dictionaries
-            guard let songInfo = json["entities"] as? [[String:Any]] else{print("tumse nhp");return}
-            
-            
-            
-            //Now downloading the photos
-            for (index,song) in songInfo.enumerated(){
-                guard let photo = song["atw"] as? String else{print("nhp");return}
-                
-                guard let url = URL(string: photo) else{print("nhp");return}
-                let photoData:Data
-                
-                do{
-                    photoData = try Data(contentsOf: url)
-                }catch{print("nhp");return}
-                
-                let image = UIImage(data: photoData)
-                self.arts[index].addphoto(image)
-                DispatchQueue.main.async{
-                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-                }
-                print("doing the step")
-            }
-            
-            print("Download URL Session ended")
-            }.resume()
-        
-        
-    }
-    
-    
-    
-    private func loadSampleArt(){
-        
-            let photo1 = UIImage(named: "Monalisa")
-            let photo2 = UIImage(named: "ChillingMonalisa")
-            let photo3 = UIImage(named: "JayMonalisa")
-            let photo4 = UIImage(named: "Couple")
-            let photo5 = UIImage(named: "ModernCouple")
-            let photo6 = UIImage(named: "Death")
-            let photo7 = UIImage(named: "Me")
-        
-            
-        guard let Art1=Art(name: "Monalisa", photo: photo1, rating: 5, photoData: nil) else{
-                print("nhp");return
-            }
-        guard let Art2=Art(name: "ChillingMonalisa", photo: photo2, rating: 3, photoData: nil) else{
-                print("nhp");return
-            }
-        guard let Art3=Art(name: "JayMonalisa", photo: photo3, rating: 4, photoData: nil) else{
-                print("nhp");return
-            }
-        guard let Art4=Art(name: "Couple", photo: photo4, rating: 3, photoData: nil) else{
-                print("nhp");return
-            }
-        guard let Art5=Art(name: "ModernCouple", photo: photo5, rating: 4, photoData: nil) else{
-                print("nhp");return
-            }
-        guard let Art6=Art(name: "Death", photo: photo6, rating: 2, photoData: nil) else{
-                print("nhp");return
-            }
-        guard let Art7=Art(name: "Me", photo: photo7, rating: 5, photoData: nil) else{
-                print("nhp");return
-            }
-            
-            arts+=[Art1,Art2,Art3,Art4,Art5,Art6,Art7]
-    }
+//        }
+//        else{
+//            cell.photoImageView.image = self.photoDict[row] as? UIImage
+//        }
+//    }
 }

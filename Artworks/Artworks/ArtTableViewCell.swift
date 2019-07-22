@@ -24,11 +24,25 @@ class ArtTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.photoImageView.image = nil
+    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    func bindModel(ArtObject: Art) {
+        self.nameLabel.text = ArtObject.name
+        self.ratingControl.rating = ArtObject.rating
+    }
+    
+    func bindImage(image: UIImage?){
+        self.photoImageView.image = image
     }
 
 }

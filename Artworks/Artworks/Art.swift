@@ -36,8 +36,20 @@ class Art{
         
     }
     
-    func addphoto(_ photo: UIImage?){
-        self.photo = photo
+    init?(name:String, rating:Int){
+        
+        guard !name.isEmpty else{
+            return nil
+        }
+        
+        if (rating<=0) || (rating>5){
+            return nil
+        }
+        
+        self.name=name
+        self.rating=rating
+        
     }
+    
     
 }

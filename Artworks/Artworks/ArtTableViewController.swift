@@ -7,15 +7,17 @@
 //
 
 import UIKit
+import os.log
 
 class ArtTableViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
 
+    //MARK:- IBOUTLETS
     @IBOutlet weak var tableView: UITableView!
     
     
-    //Properties:
-    var photoDataDict=[Int:String?]()
-    var photoDict=[Int:UIImage?]()
+    //MARK:- Properties:
+    var photoDataDict = [Int:String?]()
+    var photoDict = [Int:UIImage?]()
     var arts=[Art]()
     var number=0
     let session = URLSession(configuration: .default)
@@ -25,10 +27,14 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.delegate = self
-        tableView.dataSource = self
+        configureTableView()
         gatherDataOneByOne()
         
+    }
+    
+    fileprivate func configureTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
     }
 
     // MARK: - Table view data source
@@ -47,7 +53,10 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("func 3")
         print("--- cell for row called at \(indexPath.row)")
-       guard let cell = tableView.dequeueReusableCell(withIdentifier: "xyz", for: indexPath) as? ArtTableViewCell else{
+        
+        tableView.register(UINib(nibName: "ArtTableViewCell", bundle: nil), forCellReuseIdentifier: "ArtCell")
+        
+       guard let cell = tableView.dequeueReusableCell(withIdentifier: "ArtCell", for: indexPath) as? ArtTableViewCell else{
             //return UITableViewCell()
             fatalError("The dequeued cell is not an instance of ArtTableViewCell.")
         }
@@ -97,6 +106,26 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
         }
     }
     
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        print("Selected cell no \(indexPath.row)")
+        
+        let selectedArt = arts[indexPath.row]
+        let selectedPhoto = photoDict[indexPath.row] as? UIImage
+        
+        let mainStoryBoard = UIStoryboard(name: "Main", bundle: nil)
+        guard let showArtViewController = mainStoryBoard.instantiateViewController(withIdentifier: "ViewController") as? ViewController else{
+            fatalError("wrong ViewController instantiated")
+        }
+        print("--- showArtViewController \(showArtViewController) \(self.navigationController)")
+        
+        showArtViewController.art = selectedArt
+        showArtViewController.receivedPhoto = selectedPhoto
+        
+        self.navigationController?.pushViewController(showArtViewController, animated: true)
+        
+    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -120,7 +149,7 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
 
     /*
     // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 
     }
     */
@@ -133,15 +162,35 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//
+//        super.prepare(for: segue, sender: sender)
+//
+//
+//        guard let selectedCell = sender as? ArtTableViewCell else{
+//            fatalError("sender is not ArtTableViewCell")
+//        }
+//
+//        guard let indexPath = tableView.indexPath(for: selectedCell) else{
+//            fatalError("Something wrong with selected cell")
+//        }
+//
+//        let selectedArt = arts[indexPath.row]
+//        let selectedPhoto = photoDict[indexPath.row] as? UIImage
+//
+//        guard let showArtViewController = segue.destination as? ViewController else{
+//            fatalError("wrong destination of segue")
+//        }
+//
+//        showArtViewController.art = selectedArt
+//        showArtViewController.receivedPhoto = selectedPhoto
+//    }
+    
 
     
     //MARK: Private Methods

@@ -12,6 +12,7 @@ import UIKit
 
     //MARK: Properties
     private var ratingButtons=[UIButton]()
+    public var isEditable : Bool = true
     
     var rating = 0{
         didSet{
@@ -48,6 +49,8 @@ import UIKit
     //MARK: Methods
     
     @objc func ratingButtonTapped(button: UIButton){
+        
+        guard isEditable else { return }
         
         guard let index=ratingButtons.firstIndex(of: button) else{
             fatalError("The button \(button) was not present in \(ratingButtons)")

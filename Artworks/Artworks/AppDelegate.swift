@@ -12,10 +12,20 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    let setupObject = MyNavigationClass()
 
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions:
+        [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        window = UIWindow.init(frame: UIScreen.main.bounds)
+        print("----entered")
+        
+        let tabBarController = setupObject.setUpNavigation()
+        
+        window?.rootViewController = tabBarController
+        window?.makeKeyAndVisible()
+        
+        print("----exited")
         return true
     }
 

@@ -39,6 +39,7 @@ class ArtTableViewCell: UITableViewCell {
     func bindModel(ArtObject: Art) {
         self.nameLabel.text = ArtObject.name
         self.ratingControl.rating = ArtObject.rating
+        self.ratingControl.isEditable = false
     }
     
     func bindImage(image: UIImage?){

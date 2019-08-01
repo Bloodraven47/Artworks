@@ -36,6 +36,7 @@ class Art{
         
     }
     
+    
     init?(name:String, rating:Int){
         
         guard !name.isEmpty else{

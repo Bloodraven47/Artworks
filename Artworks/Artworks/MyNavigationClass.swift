@@ -24,17 +24,18 @@ class MyNavigationClass {
         navigationController.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 0)
         
         
-        let newViewController = mainStoryBoard.instantiateViewController(withIdentifier: "CollectionViewController") as? CollectionViewController
+        let newViewController = mainStoryBoard.instantiateViewController(withIdentifier: "CollectionViewController")
+        let collectionNavigationController = UINavigationController(rootViewController: newViewController)
 
-        guard let newVC = newViewController else {
-            tabBarController.viewControllers = [navigationController]
-            print("----failed to instantiate second ViewController")
-            return tabBarController
-        }
+//        guard let newVC = newViewController else {
+//            tabBarController.viewControllers = [navigationController]
+//            print("----failed to instantiate second ViewController")
+//            return tabBarController
+//        }
         
-        newVC.tabBarItem = UITabBarItem(tabBarSystemItem: .history, tag: 1)
+        collectionNavigationController.tabBarItem = UITabBarItem(tabBarSystemItem: .history, tag: 1)
         
-        tabBarController.viewControllers = [navigationController,newVC]
+        tabBarController.viewControllers = [navigationController,collectionNavigationController]
         
         return tabBarController
     }

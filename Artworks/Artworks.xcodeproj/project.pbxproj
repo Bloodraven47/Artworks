@@ -18,6 +18,7 @@
 		64048F9122D5E8030007A441 /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64048F9022D5E8030007A441 /* RatingControl.swift */; };
 		64251B9D22D73A0800A97824 /* ArtTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64251B9C22D73A0800A97824 /* ArtTableViewController.swift */; };
 		64251B9F22D73DEC00A97824 /* Art.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64251B9E22D73DEC00A97824 /* Art.swift */; };
+		64277F8E22F1755D00076429 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64277F8D22F1755D00076429 /* Shared.swift */; };
 		64599B6522EED38F006EC52E /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64599B6422EED38F006EC52E /* CollectionViewController.swift */; };
 		64599B6722EED50B006EC52E /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64599B6622EED50B006EC52E /* CollectionViewCell.swift */; };
 		64C37DAA22E86A4E008C0F63 /* ArtTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64C37DA922E86A4E008C0F63 /* ArtTableViewCell.xib */; };
@@ -63,6 +64,7 @@
 		64048F9022D5E8030007A441 /* RatingControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
 		64251B9C22D73A0800A97824 /* ArtTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtTableViewController.swift; sourceTree = "<group>"; };
 		64251B9E22D73DEC00A97824 /* Art.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Art.swift; sourceTree = "<group>"; };
+		64277F8D22F1755D00076429 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		64599B6422EED38F006EC52E /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		64599B6622EED50B006EC52E /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		64C37DA922E86A4E008C0F63 /* ArtTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtTableViewCell.xib; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				64048F5E22D5D5080007A441 /* AppDelegate.swift */,
 				64EC1AD022E9ABCB00D82DA8 /* MyNavigationClass.swift */,
 				64048F6022D5D5080007A441 /* ViewController.swift */,
+				64277F8D22F1755D00076429 /* Shared.swift */,
 				64048F6222D5D5080007A441 /* Main.storyboard */,
 				64251B9C22D73A0800A97824 /* ArtTableViewController.swift */,
 				64599B6422EED38F006EC52E /* CollectionViewController.swift */,
@@ -411,6 +414,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64277F8E22F1755D00076429 /* Shared.swift in Sources */,
 				64048F9122D5E8030007A441 /* RatingControl.swift in Sources */,
 				64EC1AD122E9ABCB00D82DA8 /* MyNavigationClass.swift in Sources */,
 				64599B6722EED50B006EC52E /* CollectionViewCell.swift in Sources */,

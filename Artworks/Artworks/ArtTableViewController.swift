@@ -16,9 +16,8 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
     
     
     //MARK:- Properties:
-    var photoDataDict = [Int:String?]()
-    var photoDict = [Int:UIImage?]()
-    var arts=[Art]()
+//    var photoDataDict = [Int:String?]()
+//    var photoDict = [Int:UIImage?]()
     var number=0
     let session = URLSession(configuration: .default)
     
@@ -45,8 +44,8 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
     }
 
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("func 2 \(arts.count)")
-        return arts.count
+        print("func 2 \(Shared.sharedInstance.artsList.count)")
+        return Shared.sharedInstance.artsList.count
     }
 
     
@@ -62,14 +61,14 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
         }
         
         // Fetches the appropriate art for the data source layout.
-        let art = arts[indexPath.row]
+        let art = Shared.sharedInstance.artsList[indexPath.row]
         
-//        //Assigns the values to cell
-//        cell.nameLabel.text = art.name
-//        cell.ratingControl.rating = art.rating
+        //        //Assigns the values to cell
+        //        cell.nameLabel.text = art.name
+        //        cell.ratingControl.rating = art.rating
         
         
-//        fetchAndAssignPhoto(row: indexPath.row, cell: cell)
+        //        fetchAndAssignPhoto(row: indexPath.row, cell: cell)
         cell.bindModel(ArtObject: art)
         self.fetchPhoto(row : indexPath.row, completion : { (image) in
             DispatchQueue.main.async {
@@ -83,9 +82,9 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
     }
     
     func fetchPhoto(row : Int, completion : @escaping (UIImage?)-> ()) {
-        if self.photoDict[row] == nil{
+        if Shared.sharedInstance.artsList[row].photo == nil{
             DispatchQueue.global().async {
-                guard let photo = self.photoDataDict[row] as? String else{print("nhp");return}
+                guard let photo = Shared.sharedInstance.artsList[row].photoData else{print("nhp");return}
                 
                 guard let url = URL(string: photo) else{print("nhp");return}
                 let photoData:Data
@@ -95,14 +94,16 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
                 }catch{print("nhp");return}
                 
                 let image = UIImage(data: photoData)
-                self.photoDict[row] = image
+                Shared.sharedInstance.artsList[row].photo = image
                 completion(image)
                 print("Download URL Session ended")
                 
             }
+            
+            
         }
         else{
-            completion(self.photoDict[row] as? UIImage)
+            completion(Shared.sharedInstance.artsList[row].photo)
         }
     }
     
@@ -111,8 +112,8 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
         
         print("Selected cell no \(indexPath.row)")
         
-        let selectedArt = arts[indexPath.row]
-        let selectedPhoto = photoDict[indexPath.row] as? UIImage
+        let selectedArt = Shared.sharedInstance.artsList[indexPath.row]
+        let selectedPhoto = Shared.sharedInstance.artsList[indexPath.row].photo
         
         let mainStoryBoard = UIStoryboard(name: "Main", bundle: nil)
         guard let showArtViewController = mainStoryBoard.instantiateViewController(withIdentifier: "ViewController") as? ViewController else{
@@ -222,13 +223,11 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
             
             
             //Populating the table with names and ratings only first
-            for (index,song) in songInfo.enumerated(){
+            for (_,song) in songInfo.enumerated(){
                 guard let name = song["name"] as? String else{print("nhp");return}
-                guard let photo = song["atw"] as? String else{print("nhp");return}
-                self.photoDataDict[index] = photo
-                guard let Art1 = Art(name: name, rating: Int.random(in: 1..<6)) else{print("nhp");return}
-                
-                self.arts += [Art1]
+                guard let photoData = song["atw"] as? String else{print("nhp");return}
+                guard let Art1 = Art(name: name,photo: nil, rating: Int.random(in: 1..<6),photoData: photoData ) else{print("nhp");return}
+                Shared.sharedInstance.artsList += [Art1]
 //                DispatchQueue.main.async {
 //                    print("The index is \(index) and count is \(self.arts.count) ")
 //                    self.tableView.beginUpdates()
@@ -236,6 +235,7 @@ class ArtTableViewController: UIViewController,UITableViewDataSource,UITableView
 //                    self.tableView.endUpdates()
 //                }
             }
+            
             
             //Reloading entire tableview to show the names and ratings
             DispatchQueue.main.async{

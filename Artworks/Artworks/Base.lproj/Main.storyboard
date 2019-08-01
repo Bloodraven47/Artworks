@@ -82,30 +82,27 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="1" id="AI9-hY-JKa">
-                                    <size key="itemSize" width="185" height="68"/>
+                                    <size key="itemSize" width="183" height="153"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="0BC-Ba-vhB" customClass="CollectionViewCell" customModule="Artworks" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="185" height="68"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="183" height="153"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="185" height="68"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="183" height="153"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xgk-cO-osT">
-                                                    <rect key="frame" x="47" y="24" width="42" height="21"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S1Y-Be-yNo">
+                                                    <rect key="frame" x="0.0" y="0.0" width="183" height="153"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <connections>
-                                            <outlet property="textLabel" destination="xgk-cO-osT" id="ed3-if-z2y"/>
+                                            <outlet property="imageView" destination="S1Y-Be-yNo" id="VBo-hg-8xQ"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -115,7 +112,7 @@
                         <viewLayoutGuide key="safeArea" id="ymd-1i-bbt"/>
                     </view>
                     <connections>
-                        <outlet property="collectionView" destination="rkY-Xj-Vlk" id="T30-iG-cJp"/>
+                        <outlet property="collectionView" destination="rkY-Xj-Vlk" id="r2e-Yk-4te"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Z9-71-VHE" userLabel="First Responder" sceneMemberID="firstResponder"/>
